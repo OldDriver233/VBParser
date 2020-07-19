@@ -25,12 +25,12 @@ public:
 	Token& operator=(const std::string&);
 
 	friend std::ostream& operator<<(std::ostream&,const Token&);
-	Token operator+(const Token&);
-	Token operator-(const Token&);
-	Token operator*(const Token&);
-	Token operator/(const Token&);
+	Token operator+(Token);
+	Token operator-(Token);
+	Token operator*(Token);
+	Token operator/(Token);
 
-	Token typeCast(const Token&, tokenType);
+	friend Token typeCast(const Token&, tokenType);
 
 	tokenType tType;
 private:
@@ -139,40 +139,114 @@ Token& Token::operator=(const std::string& s)
 	return *this;
 }
 
-/*TODO: åŠ å…¥ç±»å‹è½¬æ¢(GOOD)ï¼Œå¹¶ä¸”å®Œå–„è¿ç®—ç¬¦
- *åŒæ—¶åŠ å…¥%è¿ç®—ç¬¦
+/*TODO: ¼ÓÈëÀàĞÍ×ª»»(GOOD)£¬²¢ÇÒÍêÉÆÔËËã·û
+ *Í¬Ê±¼ÓÈë%ÔËËã·û
  */
 
-Token Token::operator+(const Token& t)
+Token Token::operator+(Token t)
 {
-	if (tType == t.tType)
+	if (this->tType == STR || t.tType == STR) 
 	{
-		switch (tType)
+		if (this->tType == STR && t.tType == STR)
 		{
-		case INT:
-			ival += t.ival;
-			break;
-		case CHAR:
-			cval += t.cval;
-			break;
-		case DOUBLE:
-			dval += t.dval;
-			break;
-		case STR:
-			sval += t.sval;
-			break;
-		default:
-			break;
+			this->sval += t.sval;
 		}
+	}
+	else if (this->tType == DOUBLE || t.tType == DOUBLE)
+	{
+		*this = typeCast(*this, DOUBLE);
+		t = typeCast(t, DOUBLE);
+		this->dval += t.dval;
+	}
+	else if (this->tType == INT || t.tType == INT)
+	{
+		*this = typeCast(*this, INT);
+		t = typeCast(t, INT);
+		this->ival += t.ival;
 	}
 	else
 	{
-
+		this->cval += t.cval;
 	}
 	return *this;
 }
 
-inline Token Token::typeCast(const Token& t, tokenType target)
+Token Token::operator-(Token t)
+{
+	if (this->tType == STR || t.tType == STR)
+	{
+		throw (std::runtime_error("stringÀàĞÍÃ»ÓĞ-ÔËËã·û"));
+	}
+	else if (this->tType == DOUBLE || t.tType == DOUBLE)
+	{
+		*this = typeCast(*this, DOUBLE);
+		t = typeCast(t, DOUBLE);
+		this->dval -= t.dval;
+	}
+	else if (this->tType == INT || t.tType == INT)
+	{
+		*this = typeCast(*this, INT);
+		t = typeCast(t, INT);
+		this->ival -= t.ival;
+	}
+	else
+	{
+		this->cval -= t.cval;
+	}
+	return *this;
+}
+
+Token Token::operator*(Token t)
+{
+	if (this->tType == STR || t.tType == STR)
+	{
+		throw std::runtime_error("stringÀàĞÍÃ»ÓĞ*ÔËËã·û");
+	}
+	else if (this->tType == DOUBLE || t.tType == DOUBLE)
+	{
+		*this = typeCast(*this, DOUBLE);
+		t = typeCast(t, DOUBLE);
+		this->dval *= t.dval;
+	}
+	else if (this->tType == INT || t.tType == INT)
+	{
+		*this = typeCast(*this, INT);
+		t = typeCast(t, INT);
+		this->ival *= t.ival;
+	}
+	else
+	{
+		this->cval *= t.cval;
+	}
+	return *this;
+}
+
+Token Token::operator/(Token t)
+{
+	if (this->tType == STR || t.tType == STR)
+	{
+		throw std::runtime_error("stringÀàĞÍÃ»ÓĞ/ÔËËã·û");
+	}
+	else if (this->tType == DOUBLE || t.tType == DOUBLE)
+	{
+		*this = typeCast(*this, DOUBLE);
+		t = typeCast(t, DOUBLE);
+		this->dval /= t.dval;
+	}
+	else if (this->tType == INT || t.tType == INT)
+	{
+		*this = typeCast(*this, INT);
+		t = typeCast(t, INT);
+		this->ival /= t.ival;
+	}
+	else
+	{
+		this->cval /= t.cval;
+	}
+	return *this;
+}
+
+inline Token typeCast(const Token& t, tokenType target)
 {
 	Token output;
 	output.tType = target;
@@ -182,19 +256,19 @@ inline Token Token::typeCast(const Token& t, tokenType target)
 		if (t.tType == INT)output.ival = t.ival;
 		else if (t.tType == DOUBLE) output.ival = t.dval;
 		else if (t.tType == CHAR) output.ival = t.cval;
-		else throw std::runtime_error("æ— æ³•å°†stringç±»å‹è½¬æ¢ä¸ºintç±»å‹");
+		else throw std::runtime_error("ÎŞ·¨½«stringÀàĞÍ×ª»»ÎªintÀàĞÍ");
 		break;
 	case CHAR:
 		if (t.tType == INT)output.cval = t.ival;
 		else if (t.tType == DOUBLE) output.cval = t.dval;
 		else if (t.tType == CHAR) output.cval = t.cval;
-		else throw std::runtime_error("æ— æ³•å°†stringç±»å‹è½¬æ¢ä¸ºcharç±»å‹");
+		else throw std::runtime_error("ÎŞ·¨½«stringÀàĞÍ×ª»»ÎªcharÀàĞÍ");
 		break;
 	case DOUBLE:
 		if (t.tType == INT)output.dval = t.ival;
 		else if (t.tType == DOUBLE) output.dval = t.dval;
 		else if (t.tType == CHAR) output.dval = t.cval;
-		else throw std::runtime_error("æ— æ³•å°†stringç±»å‹è½¬æ¢ä¸ºdoubleç±»å‹");
+		else throw std::runtime_error("ÎŞ·¨½«stringÀàĞÍ×ª»»ÎªdoubleÀàĞÍ");
 		break;
 	case STR:
 		output = "";

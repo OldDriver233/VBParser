@@ -1,4 +1,4 @@
-ï»¿// VBParser.cpp: å®šä¹‰åº”ç”¨ç¨‹åºçš„å…¥å£ç‚¹ã€‚
+// VBParser.cpp: ¶¨ÒåÓ¦ÓÃ³ÌĞòµÄÈë¿Úµã¡£
 //
 
 #include "VBParser.h"
@@ -9,8 +9,10 @@ using namespace std;
 int main()
 {
 	Token t = Token();
+	Token t1 = Token();
 	t = 4.5;
-	t = t.typeCast(t, INT);
+	t1 = "5";
+	t = t * t1;
 	cout << t << endl;
 	return 0;
 }

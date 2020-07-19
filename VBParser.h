@@ -1,8 +1,8 @@
-﻿// VBParser.h: 标准系统包含文件的包含文件
-// 或项目特定的包含文件。
+// VBParser.h: ��׼ϵͳ�����ļ��İ����ļ�
+// ����Ŀ�ض��İ����ļ���
 
 #pragma once
 
 #include <iostream>
 
-// TODO: 在此处引用程序需要的其他标头。
+// TODO: �ڴ˴����ó�����Ҫ��������ͷ��
