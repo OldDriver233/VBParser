@@ -15,7 +15,7 @@ class Token
 public:
 	Token();
 	Token(const Token&);
-	Token(const tokenType, const bool);
+	Token(const tokenType, const bool, const bool);
 	~Token();
 
 	Token& operator=(const Token&);
@@ -43,6 +43,7 @@ private:
 	};
 	void copyToken(const Token&);
 	bool changeable = true;
+	bool keyword = false;
 };
 
 inline Token::Token()
@@ -56,7 +57,7 @@ inline Token::Token(const Token& t)
 	copyToken(t);
 }
 
-inline Token::Token(const tokenType t, const bool b)
+inline Token::Token(const tokenType t, const bool bChange, const bool bKwd)
 {
 	tType = t;
 	switch (tType)
@@ -76,7 +77,8 @@ inline Token::Token(const tokenType t, const bool b)
 	default:
 		break;
 	}
-	changeable = b;
+	changeable = bChange;
+	keyword = bKwd;
 }
 
 inline Token::~Token()
