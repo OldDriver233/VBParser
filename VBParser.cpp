@@ -16,6 +16,6 @@ int main()
 	t1 = 5;
 	t = t * t1;
 	cout << t << endl;
-	Parse(vec,"rrŭŭŭ + 1");
+	Parse(vec,"\'rrŭŭŭ\' + 1");
 	return 0;
 }

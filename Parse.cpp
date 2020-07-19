@@ -99,6 +99,7 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 			{
 				if (sInput[i - 1] != '\\')
 				{
+					inStat = false;
 					Token object = Token();
 					object = tmpStr;
 					tmpStr = "";
@@ -118,6 +119,7 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 					object = tmpInt;
 					tmpInt = 0;
 					tInput.push_back(object);
+					inStat = false;
 					i -= 1;
 					break;
 				case CHAR:
@@ -126,6 +128,7 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 					object = tmpDbl;
 					tmpDbl = 0;
 					tInput.push_back(object);
+					inStat = false;
 					i -= 1;
 					break;
 				case STR:
