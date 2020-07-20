@@ -1,8 +1,9 @@
-#pragma once
+#ifndef _Token
+#define _Token
 #include<iostream>
 #include<string>
 #include<exception>
-enum tokenType
+extern enum tokenType
 {
 	INT,
 	CHAR,
@@ -10,12 +11,11 @@ enum tokenType
 	STR
 };
 
-class Token
+extern class Token
 {
 public:
 	Token();
 	Token(const Token&);
-	Token(const tokenType, const bool, const bool);
 	~Token();
 
 	Token& operator=(const Token&);
@@ -31,8 +31,11 @@ public:
 	Token operator/(Token);
 
 	friend Token typeCast(const Token&, tokenType);
+	char CharGet();
 
 	tokenType tType;
+	bool changeable;
+	bool keyword;
 private:
 	union
 	{
@@ -42,43 +45,19 @@ private:
 		std::string sval;
 	};
 	void copyToken(const Token&);
-	bool changeable = true;
-	bool keyword = false;
 };
 
 inline Token::Token()
 {
 	tType = INT;
+	changeable = true;
+	keyword = false;
 	ival = 0;
 }
 
 inline Token::Token(const Token& t)
 {
 	copyToken(t);
-}
-
-inline Token::Token(const tokenType t, const bool bChange, const bool bKwd)
-{
-	tType = t;
-	switch (tType)
-	{
-	case INT:
-		ival = 0;
-		break;
-	case CHAR:
-		cval = 0;
-		break;
-	case DOUBLE:
-		dval = 0.0;
-		break;
-	case STR:
-		new(&sval) std::string();
-		break;
-	default:
-		break;
-	}
-	changeable = bChange;
-	keyword = bKwd;
 }
 
 inline Token::~Token()
@@ -98,6 +77,8 @@ void Token::copyToken(const Token& t)
 	case STR: new(&sval) std::string(t.sval); break;
 	default:break;
 	}
+	changeable = t.changeable;
+	keyword = t.keyword;
 }
 
 Token& Token::operator=(const Token& t)
@@ -248,6 +229,12 @@ Token Token::operator/(Token t)
 	return *this;
 }
 
+inline char Token::CharGet()
+{
+	if (tType != CHAR)return '\0';
+	else return cval;
+}
+
 inline Token typeCast(const Token& t, tokenType target)
 {
 	Token output;
@@ -299,3 +286,4 @@ std::ostream& operator<<(std::ostream& os,const Token& t)
 	}
 	return os;
 }
+#endif

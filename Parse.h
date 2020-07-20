@@ -1,6 +1,9 @@
+#ifndef _Parse
+#define _Parse
 #include"Token.h"
 #include<vector>
 std::string pattern = "=+_*/%><()&|";
+//»ìãç¿ªÊ¼
 
 void Parse(std::vector<Token>& tInput, const std::string& sInput)
 {
@@ -23,8 +26,10 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 			}
 			else if (pattern.find(sInput[i]) != pattern.npos)
 			{
-				Token object = Token(CHAR, false, true);
+				Token object = Token();
 				object = sInput[i];
+				object.keyword = true;
+				object.changeable = false;
 				tInput.push_back(object);
 			}
 			else if (sInput[i] == '\'' || sInput[i] == '\"')
@@ -46,6 +51,7 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 			if (sInput[i] == ' ' || pattern.find(sInput[i]) != pattern.npos)
 			{
 				Token object = Token();
+				Token inp;
 				inStat = false;
 				switch (stat)
 				{
@@ -64,15 +70,23 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 				case STR:
 					object = tmpStr;
 					tmpStr = "";
-					tInput.push_back(object);
+					if (kwd)
+					{
+						object.changeable = false;
+						object.keyword = true;
+					}
+					inp = Token(object);
+					tInput.push_back(inp);
 					break;
 				default:
 					break;
 				}
 				if (sInput[i] != ' ')
 				{
-					Token object = Token(CHAR, false, true);
+					Token object = Token();
 					object = sInput[i];
+					object.keyword = true;
+					object.changeable = false;
 					tInput.push_back(object);
 				}
 			}
@@ -160,6 +174,11 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 		case STR:
 			object = tmpStr;
 			tmpStr = "";
+			if (kwd)
+			{
+				object.changeable = false;
+				object.keyword = true;
+			}
 			tInput.push_back(object);
 			break;
 		default:
@@ -167,3 +186,4 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 		}
 	}
 }
+#endif

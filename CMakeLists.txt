@@ -6,6 +6,6 @@ cmake_minimum_required (VERSION 3.8)
 project ("VBParser")
 
 # 将源代码添加到此项目的可执行文件。
-add_executable (VBParser "VBParser.cpp" "VBParser.h")
+add_executable (VBParser  "VBParser.cpp" "VBParser.h"  "Runner.h")
 
 # TODO: 如有需要，请添加测试并安装目标。
