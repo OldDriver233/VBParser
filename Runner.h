@@ -1,4 +1,4 @@
-#ifndef _Runner
+﻿#ifndef _Runner
 #define _Runner
 #include "Token.h"
 #include<vector>

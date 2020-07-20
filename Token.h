@@ -1,4 +1,4 @@
-#ifndef _Token
+﻿#ifndef _Token
 #define _Token
 #include<iostream>
 #include<string>
@@ -122,8 +122,8 @@ Token& Token::operator=(const std::string& s)
 	return *this;
 }
 
-/*TODO: ��������ת��(GOOD)���������������
- *ͬʱ����%�����
+/*TODO: 锟斤拷锟斤拷锟斤拷锟斤拷转锟斤拷(GOOD)锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟�
+ *同时锟斤拷锟斤拷%锟斤拷锟斤拷锟�
  */
 
 Token Token::operator+(Token t)
@@ -158,7 +158,7 @@ Token Token::operator-(Token t)
 {
 	if (this->tType == STR || t.tType == STR)
 	{
-		throw (std::runtime_error("string����û��-�����"));
+		throw (std::runtime_error("你为什么对string做减法？"));
 	}
 	else if (this->tType == DOUBLE || t.tType == DOUBLE)
 	{
@@ -183,7 +183,7 @@ Token Token::operator*(Token t)
 {
 	if (this->tType == STR || t.tType == STR)
 	{
-		throw std::runtime_error("string����û��*�����");
+		throw std::runtime_error("你为什么对string做乘法？");
 	}
 	else if (this->tType == DOUBLE || t.tType == DOUBLE)
 	{
@@ -208,7 +208,7 @@ Token Token::operator/(Token t)
 {
 	if (this->tType == STR || t.tType == STR)
 	{
-		throw std::runtime_error("string����û��/�����");
+		throw std::runtime_error("你为什么对string做除法？");
 	}
 	else if (this->tType == DOUBLE || t.tType == DOUBLE)
 	{
@@ -245,19 +245,19 @@ inline Token typeCast(const Token& t, tokenType target)
 		if (t.tType == INT)output.ival = t.ival;
 		else if (t.tType == DOUBLE) output.ival = t.dval;
 		else if (t.tType == CHAR) output.ival = t.cval;
-		else throw std::runtime_error("�޷���string����ת��Ϊint����");
+		else throw std::runtime_error("string无法转为int");
 		break;
 	case CHAR:
 		if (t.tType == INT)output.cval = t.ival;
 		else if (t.tType == DOUBLE) output.cval = t.dval;
 		else if (t.tType == CHAR) output.cval = t.cval;
-		else throw std::runtime_error("�޷���string����ת��Ϊchar����");
+		else throw std::runtime_error("string无法转为char");
 		break;
 	case DOUBLE:
 		if (t.tType == INT)output.dval = t.ival;
 		else if (t.tType == DOUBLE) output.dval = t.dval;
 		else if (t.tType == CHAR) output.dval = t.cval;
-		else throw std::runtime_error("�޷���string����ת��Ϊdouble����");
+		else throw std::runtime_error("string无法转为double");
 		break;
 	case STR:
 		output = "";

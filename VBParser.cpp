@@ -1,4 +1,4 @@
-// VBParser.cpp: ����Ӧ�ó������ڵ㡣
+﻿// VBParser.cpp: 定义应用程序的入口点。
 //
 #include "VBParser.h"
 #include "Token.h"
@@ -18,7 +18,7 @@ void Check()
 	t1 = 5;
 	t = t * t1;
 	cout << t << endl;
-	Parse(vec, "rrŭŭŭ + 1");
+	Parse(vec, "rr怒怒怒 + 1");
 	calculate(vec, 0, 2);
 }
 

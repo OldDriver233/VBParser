@@ -1,9 +1,9 @@
-#ifndef _Parse
+﻿#ifndef _Parse
 #define _Parse
 #include"Token.h"
 #include<vector>
 std::string pattern = "=+_*/%><()&|";
-//���翪ʼ
+//？？？
 
 void Parse(std::vector<Token>& tInput, const std::string& sInput)
 {
