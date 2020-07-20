@@ -5,6 +5,8 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("VBParser")
 
+add_compile_options(-std=c++11)
+
 # 将源代码添加到此项目的可执行文件。
 add_executable (VBParser  "VBParser.cpp" "VBParser.h"  "Runner.h")
 

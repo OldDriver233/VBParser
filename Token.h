@@ -3,7 +3,7 @@
 #include<iostream>
 #include<string>
 #include<exception>
-extern enum tokenType
+enum tokenType
 {
 	INT,
 	CHAR,
@@ -11,7 +11,7 @@ extern enum tokenType
 	STR
 };
 
-extern class Token
+class Token
 {
 public:
 	Token();
@@ -122,8 +122,8 @@ Token& Token::operator=(const std::string& s)
 	return *this;
 }
 
-/*TODO: ¼ÓÈëÀàÐÍ×ª»»(GOOD)£¬²¢ÇÒÍêÉÆÔËËã·û
- *Í¬Ê±¼ÓÈë%ÔËËã·û
+/*TODO: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½(GOOD)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ *Í¬Ê±ï¿½ï¿½ï¿½ï¿½%ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 
 Token Token::operator+(Token t)
@@ -158,7 +158,7 @@ Token Token::operator-(Token t)
 {
 	if (this->tType == STR || t.tType == STR)
 	{
-		throw (std::runtime_error("stringÀàÐÍÃ»ÓÐ-ÔËËã·û"));
+		throw (std::runtime_error("stringï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½"));
 	}
 	else if (this->tType == DOUBLE || t.tType == DOUBLE)
 	{
@@ -183,7 +183,7 @@ Token Token::operator*(Token t)
 {
 	if (this->tType == STR || t.tType == STR)
 	{
-		throw std::runtime_error("stringÀàÐÍÃ»ÓÐ*ÔËËã·û");
+		throw std::runtime_error("stringï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½*ï¿½ï¿½ï¿½ï¿½ï¿½");
 	}
 	else if (this->tType == DOUBLE || t.tType == DOUBLE)
 	{
@@ -208,7 +208,7 @@ Token Token::operator/(Token t)
 {
 	if (this->tType == STR || t.tType == STR)
 	{
-		throw std::runtime_error("stringÀàÐÍÃ»ÓÐ/ÔËËã·û");
+		throw std::runtime_error("stringï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½");
 	}
 	else if (this->tType == DOUBLE || t.tType == DOUBLE)
 	{
@@ -245,19 +245,19 @@ inline Token typeCast(const Token& t, tokenType target)
 		if (t.tType == INT)output.ival = t.ival;
 		else if (t.tType == DOUBLE) output.ival = t.dval;
 		else if (t.tType == CHAR) output.ival = t.cval;
-		else throw std::runtime_error("ÎÞ·¨½«stringÀàÐÍ×ª»»ÎªintÀàÐÍ");
+		else throw std::runtime_error("ï¿½Þ·ï¿½ï¿½ï¿½stringï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Îªintï¿½ï¿½ï¿½ï¿½");
 		break;
 	case CHAR:
 		if (t.tType == INT)output.cval = t.ival;
 		else if (t.tType == DOUBLE) output.cval = t.dval;
 		else if (t.tType == CHAR) output.cval = t.cval;
-		else throw std::runtime_error("ÎÞ·¨½«stringÀàÐÍ×ª»»ÎªcharÀàÐÍ");
+		else throw std::runtime_error("ï¿½Þ·ï¿½ï¿½ï¿½stringï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Îªcharï¿½ï¿½ï¿½ï¿½");
 		break;
 	case DOUBLE:
 		if (t.tType == INT)output.dval = t.ival;
 		else if (t.tType == DOUBLE) output.dval = t.dval;
 		else if (t.tType == CHAR) output.dval = t.cval;
-		else throw std::runtime_error("ÎÞ·¨½«stringÀàÐÍ×ª»»ÎªdoubleÀàÐÍ");
+		else throw std::runtime_error("ï¿½Þ·ï¿½ï¿½ï¿½stringï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Îªdoubleï¿½ï¿½ï¿½ï¿½");
 		break;
 	case STR:
 		output = "";

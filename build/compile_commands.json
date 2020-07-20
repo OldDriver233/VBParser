@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/sun/Documents/PJ/VBParser/VBParser/build",
+  "command": "/usr/bin/clang++    -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk   -std=c++11 -o CMakeFiles/VBParser.dir/VBParser.cpp.o -c /Users/sun/Documents/PJ/VBParser/VBParser/VBParser.cpp",
+  "file": "/Users/sun/Documents/PJ/VBParser/VBParser/VBParser.cpp"
+}
+]
