@@ -6,6 +6,7 @@
 #include "Runner.h"
 #include<iostream>
 #include<stack>
+#include<map>
 
 using namespace std;
 
@@ -18,8 +19,8 @@ void Check()
 	t1 = 5;
 	t = t * t1;
 	cout << t << endl;
-	Parse(vec, "rr怒怒怒 + 1");
-	calculate(vec, 0, 2);
+	Parse(vec, "(3 + 1) * 4");
+	cout << calculate(vec, 0, vec.size()-1);
 }
 
 int main()
