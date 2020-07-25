@@ -1,6 +1,7 @@
 ﻿#ifndef _Runner
 #define _Runner
 #include "Token.h"
+#include"Variable.h"
 #include<vector>
 #include<cmath>
 #include<map>
@@ -39,7 +40,7 @@ Token singleCalc(Token& t1, Token& t2, char& operate)
 	return result;
 }
 
-Token calculate(std::vector<Token>& input, int begin, int end)
+Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::string,Variable>& vars)
 {
 	Token result;
 	std::vector<calcUnit> vecUnit;
@@ -71,7 +72,7 @@ Token calculate(std::vector<Token>& input, int begin, int end)
 						{
 							i = j;
 							withVal = true;
-							tmp.cont = calculate(input, index+1, j-1);
+							tmp.cont = calculate(input, index+1, j-1, vars);
 							break;
 						}
 					}
@@ -109,9 +110,21 @@ Token calculate(std::vector<Token>& input, int begin, int end)
 	return result;
 }
 
-Token runner()
+Token runner(std::vector<Token>& input, std::map<std::string,Variable>& vars)
 {
 	Token returnValue;
+	if (input[0].StringGet() == "Dim")
+	{
+		vars.insert(std::make_pair<std::string, Variable>(input[1].StringGet(), Variable(1)));
+	}
+	else if(input[1].CharGet() == '=')
+	{
+		vars[input[0].StringGet()].setToken(calculate(input, 2, input.size() - 1, vars));
+	}
+	else
+	{
+		throw std::runtime_error("未完成");
+	}
 	return returnValue;
 }
 #endif

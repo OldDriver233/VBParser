@@ -32,6 +32,7 @@ public:
 
 	friend Token typeCast(const Token&, tokenType);
 	char CharGet();
+	std::string StringGet();
 
 	tokenType tType;
 	bool changeable;
@@ -232,6 +233,12 @@ inline char Token::CharGet()
 {
 	if (tType != CHAR)return '\0';
 	else return cval;
+}
+
+inline std::string Token::StringGet()
+{
+	if (tType != STR)return "";
+	else return sval;
 }
 
 inline Token typeCast(const Token& t, tokenType target)
