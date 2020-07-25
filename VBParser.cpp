@@ -17,16 +17,12 @@ void Check()
 	map<string, int> mIndex;
 	vector<Token> vec;
 	vector<Variable> mVar;
-	t = 4.5;
-	t1 = 5;
-	t = t * t1;
-	cout << t << endl;
 	vec.push_back(Token());
 	vec.clear();
 	Parse(vec, "Dim a");
 	runner(vec, mIndex, mVar);
 	vec.clear();
-	Parse(vec, "a = 1 * 4");
+	Parse(vec, "a = 1.2");
 	runner(vec, mIndex, mVar);
 }
 
@@ -37,7 +33,7 @@ int main(int argc, char** argv)
 	vector<Variable> varVec;
 	string inputStr;
 	int index = 0;
-	//Check();
+	Check();
 	cout << "=>";
 	while (getline(cin,inputStr))
 	{

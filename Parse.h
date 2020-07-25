@@ -13,6 +13,7 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 	int tmpInt = 0;
 	double tmpDbl = 0.0;
 	std::string tmpStr = "";
+	double dCount = 0;
 	for (long long i = 0; i < sInput.size(); i++)
 	{
 		if (!inStat)
@@ -65,6 +66,7 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 				case DOUBLE:
 					object = tmpDbl;
 					tmpDbl = 0;
+					dCount = 0;
 					tInput.push_back(object);
 					break;
 				case STR:
@@ -100,7 +102,8 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 				case CHAR:
 					break;
 				case DOUBLE:
-					tmpDbl = tmpDbl * 10.0 + sInput[i] - '0';
+					tmpDbl = tmpDbl + (sInput[i] - '0') * dCount;
+					dCount *= 0.1;
 					break;
 				case STR:
 					tmpStr = tmpStr + sInput[i];
@@ -122,6 +125,24 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 				else
 				{
 					tmpStr = tmpStr + sInput[i];
+				}
+			}
+			else if(sInput[i] == '.')
+			{
+				switch (stat)
+				{
+				case INT:
+				case CHAR:
+					stat = DOUBLE;
+					tmpDbl = tmpInt;
+					dCount = 0.1;
+					break;
+				case DOUBLE:
+				case STR:
+					throw std::runtime_error("错误的\'.\'");
+					break;
+				default:
+					break;
 				}
 			}
 			else
