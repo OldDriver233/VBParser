@@ -85,7 +85,8 @@ Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::str
 		}
 		else
 		{
-			tmp.cont = input[i];
+			if (!input[i].keyword)tmp.cont = input[i];
+			else tmp.cont = vars[varIndex[input[i].StringGet()]].var[0];
 			withVal = true;
 		}
 	}
@@ -123,6 +124,11 @@ Token runner(std::vector<Token>& input, std::map<std::string,int>& varIndex, std
 	{
 		Token result = calculate(input, 2, input.size() - 1, varIndex, vars);
 		vars[varIndex[input[0].StringGet()]].var[0] = result;
+		returnValue = result;
+	}
+	else if(input[0].StringGet() == "Print")
+	{
+		std::cout << calculate(input,1,input.size()-1,varIndex,vars) << std::endl;
 	}
 	else
 	{

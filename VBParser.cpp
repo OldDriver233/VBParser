@@ -37,14 +37,21 @@ int main(int argc, char** argv)
 	vector<Variable> varVec;
 	string inputStr;
 	int index = 0;
-	Check();
+	//Check();
 	cout << "=>";
 	while (getline(cin,inputStr))
 	{
 		vector<Token> vec;
-		Parse(vec, inputStr);
-		parseResult.push_back(vec);
-		cout << calculate(parseResult[index], 0, parseResult[index].size() - 1, varIndex, varVec) << endl;
+		try
+		{
+			Parse(vec, inputStr);
+			parseResult.push_back(vec);
+			runner(vec,varIndex,varVec);
+		}
+		catch (const std::exception& e)
+		{
+			cout << e.what() << endl;
+		}
 		cout << "=>";
 		vec.clear();
 	}
