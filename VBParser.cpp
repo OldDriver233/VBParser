@@ -14,23 +14,27 @@ void Check()
 {
 	Token t = Token();
 	Token t1 = Token();
-	map<string, Variable> m;
+	map<string, int> mIndex;
 	vector<Token> vec;
+	vector<Variable> mVar;
 	t = 4.5;
 	t1 = 5;
 	t = t * t1;
 	cout << t << endl;
+	vec.push_back(Token());
+	vec.clear();
 	Parse(vec, "Dim a");
-	runner(vec,m);
+	runner(vec, mIndex, mVar);
 	vec.clear();
 	Parse(vec, "a = 1 * 4");
-	runner(vec, m);
+	runner(vec, mIndex, mVar);
 }
 
 int main(int argc, char** argv)
 {
 	vector<vector<Token> >parseResult;
-	map<string, Variable> varMap;
+	map<string, int> varIndex;
+	vector<Variable> varVec;
 	string inputStr;
 	int index = 0;
 	Check();
@@ -40,7 +44,7 @@ int main(int argc, char** argv)
 		vector<Token> vec;
 		Parse(vec, inputStr);
 		parseResult.push_back(vec);
-		cout << calculate(parseResult[index], 0, parseResult[index].size() - 1,varMap) << endl;
+		cout << calculate(parseResult[index], 0, parseResult[index].size() - 1, varIndex, varVec) << endl;
 		cout << "=>";
 		vec.clear();
 	}

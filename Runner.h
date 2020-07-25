@@ -40,7 +40,7 @@ Token singleCalc(Token& t1, Token& t2, char& operate)
 	return result;
 }
 
-Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::string,Variable>& vars)
+Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::string,int>& varIndex, std::vector<Variable>& vars)
 {
 	Token result;
 	std::vector<calcUnit> vecUnit;
@@ -72,7 +72,7 @@ Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::str
 						{
 							i = j;
 							withVal = true;
-							tmp.cont = calculate(input, index+1, j-1, vars);
+							tmp.cont = calculate(input, index+1, j-1, varIndex, vars);
 							break;
 						}
 					}
@@ -110,16 +110,19 @@ Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::str
 	return result;
 }
 
-Token runner(std::vector<Token>& input, std::map<std::string,Variable>& vars)
+Token runner(std::vector<Token>& input, std::map<std::string,int>& varIndex, std::vector<Variable>& vars)
 {
 	Token returnValue;
 	if (input[0].StringGet() == "Dim")
 	{
-		vars.insert(std::make_pair<std::string, Variable>(input[1].StringGet(), Variable(1)));
+		varIndex[input[1].StringGet()] = vars.size();
+		vars.push_back(Variable());
+		vars[vars.size() - 1].var.push_back(Token());
 	}
 	else if(input[1].CharGet() == '=')
 	{
-		vars[input[0].StringGet()].setToken(calculate(input, 2, input.size() - 1, vars));
+		Token result = calculate(input, 2, input.size() - 1, varIndex, vars);
+		vars[varIndex[input[0].StringGet()]].var[0] = result;
 	}
 	else
 	{

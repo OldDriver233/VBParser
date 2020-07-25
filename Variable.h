@@ -9,11 +9,9 @@ public:
 	bool single = false;
 	int endIndex;
 	Variable();
-	Variable(int);
-	Variable(Variable&);
 	~Variable();
 
-	Variable operator=(Variable& var);
+	Variable operator=(const Variable& var);
 
 	Token getToken();
 	Token getToken(int);
@@ -23,28 +21,15 @@ public:
 
 inline Variable::Variable()
 {
-	var.reserve(3);
 	endIndex = 0;
 	single = true;
-}
-
-inline Variable::Variable(int size)
-{
-	var.reserve(size+2);
-	if (size == 1)single = true;
-	endIndex = size - 1;
-}
-
-inline Variable::Variable(Variable& var)
-{
-	*this = var;
 }
 
 Variable::~Variable()
 {
 }
 
-inline Variable Variable::operator=(Variable& var)
+inline Variable Variable::operator=(const Variable& var)
 {
 	this->endIndex = var.endIndex;
 	this->single = var.single;
