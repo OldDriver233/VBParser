@@ -138,8 +138,11 @@ void Parse(std::vector<Token>& tInput, const std::string& sInput)
 					dCount = 0.1;
 					break;
 				case DOUBLE:
-				case STR:
 					throw std::runtime_error("错误的\'.\'");
+					break;
+				case STR:
+					if (kwd)throw std::runtime_error("错误的\'.\'");
+					else tmpStr = tmpStr + '.';
 					break;
 				default:
 					break;

@@ -30,9 +30,17 @@ public:
 	Token operator*(Token);
 	Token operator/(Token);
 
+	Token operator<(Token);
+	Token operator==(Token);
+	Token operator>(Token);
+	Token operator<=(Token);
+	Token operator>=(Token);
+	Token operator!=(Token);
+
 	friend Token typeCast(const Token&, tokenType);
 	char CharGet();
 	std::string StringGet();
+	bool BoolGet();
 
 	tokenType tType;
 	bool changeable;
@@ -229,6 +237,204 @@ Token Token::operator/(Token t)
 	return *this;
 }
 
+inline Token Token::operator< (Token t)
+{
+	Token pos, neg;
+	pos = 1;
+	neg = 0;
+	switch (t.tType)
+	{
+	case INT:
+		t = *this - t;
+		if (t.ival < 0)return pos;
+		else return neg;
+		break;
+	case DOUBLE:
+		t = *this - t;
+		if (t.dval < 0)return pos;
+		else return neg;
+		break;
+	case CHAR:
+		t = *this - t;
+		if (t.cval < 0)return pos;
+		else return neg;
+		break;
+	default:
+		if (this->tType == STR && t.tType == STR)
+		{
+			if (this->sval < t.sval)return pos;
+			else return neg;
+		}
+		else throw std::runtime_error("无法比较");
+		break;
+	}
+}
+
+inline Token Token::operator==(Token t)
+{
+	Token pos, neg;
+	pos = 1;
+	neg = 0;
+	switch (t.tType)
+	{
+	case INT:
+		t = *this - t;
+		if (t.ival == 0)return pos;
+		else return neg;
+		break;
+	case DOUBLE:
+		t = *this - t;
+		if (t.dval == 0)return pos;
+		else return neg;
+		break;
+	case CHAR:
+		t = *this - t;
+		if (t.cval == 0)return pos;
+		else return neg;
+		break;
+	default:
+		if (this->tType == STR && t.tType == STR)
+		{
+			if (this->sval == t.sval)return pos;
+			else return neg;
+		}
+		else throw std::runtime_error("无法比较");
+		break;
+	}
+}
+
+inline Token Token::operator> (Token t)
+{
+	Token pos, neg;
+	pos = 1;
+	neg = 0;
+	switch (t.tType)
+	{
+	case INT:
+		t = *this - t;
+		if (t.ival > 0)return pos;
+		else return neg;
+		break;
+	case DOUBLE:
+		t = *this - t;
+		if (t.dval > 0)return pos;
+		else return neg;
+		break;
+	case CHAR:
+		t = *this - t;
+		if (t.cval > 0)return pos;
+		else return neg;
+		break;
+	default:
+		if (this->tType == STR && t.tType == STR)
+		{
+			if (this->sval > t.sval)return pos;
+			else return neg;
+		}
+		else throw std::runtime_error("无法比较");
+		break;
+	}
+}
+
+inline Token Token::operator<=(Token t)
+{
+	Token pos, neg;
+	pos = 1;
+	neg = 0;
+	switch (t.tType)
+	{
+	case INT:
+		t = *this - t;
+		if (t.ival <= 0)return pos;
+		else return neg;
+		break;
+	case DOUBLE:
+		t = *this - t;
+		if (t.dval <= 0)return pos;
+		else return neg;
+		break;
+	case CHAR:
+		t = *this - t;
+		if (t.cval <= 0)return pos;
+		else return neg;
+		break;
+	default:
+		if (this->tType == STR && t.tType == STR)
+		{
+			if (this->sval <= t.sval)return pos;
+			else return neg;
+		}
+		else throw std::runtime_error("无法比较");
+		break;
+	}
+}
+
+inline Token Token::operator>=(Token t)
+{
+	Token pos, neg;
+	pos = 1;
+	neg = 0;
+	switch (t.tType)
+	{
+	case INT:
+		t = *this - t;
+		if (t.ival >= 0)return pos;
+		else return neg;
+		break;
+	case DOUBLE:
+		t = *this - t;
+		if (t.dval >= 0)return pos;
+		else return neg;
+		break;
+	case CHAR:
+		t = *this - t;
+		if (t.cval >= 0)return pos;
+		else return neg;
+		break;
+	default:
+		if (this->tType == STR && t.tType == STR)
+		{
+			if (this->sval >= t.sval)return pos;
+			else return neg;
+		}
+		else throw std::runtime_error("无法比较");
+		break;
+	}
+}
+
+inline Token Token::operator!=(Token t)
+{
+	Token pos, neg;
+	pos = 1;
+	neg = 0;
+	switch (t.tType)
+	{
+	case INT:
+		t = *this - t;
+		if (t.ival != 0)return pos;
+		else return neg;
+		break;
+	case DOUBLE:
+		t = *this - t;
+		if (t.dval != 0)return pos;
+		else return neg;
+		break;
+	case CHAR:
+		t = *this - t;
+		if (t.cval != 0)return pos;
+		else return neg;
+		break;
+	default:
+		if (this->tType == STR && t.tType == STR)
+		{
+			if (this->sval != t.sval)return pos;
+			else return neg;
+		}
+		else throw std::runtime_error("无法比较");
+		break;
+	}
+}
+
 inline char Token::CharGet()
 {
 	if (tType != CHAR)return '\0';
@@ -239,6 +445,12 @@ inline std::string Token::StringGet()
 {
 	if (tType != STR)return "";
 	else return sval;
+}
+
+inline bool Token::BoolGet()
+{
+	if (tType == INT && ival != 0)return true;
+	else return false;
 }
 
 inline Token typeCast(const Token& t, tokenType target)
