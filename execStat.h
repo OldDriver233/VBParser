@@ -1,11 +1,8 @@
 #pragma once
-namespace execStat
+enum execStat
 {
-	enum execStat
-	{
-		normal,
-		condFalse,
-		ifExec,
-		ifEnd
-	};
-}
+	normal,
+	condFalse,
+	ifExec,
+	ifEnd
+};

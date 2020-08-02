@@ -19,18 +19,18 @@ void Check()
 	map<string, int> mIndex;
 	vector<Token> vec;
 	vector<Variable> mVar;
-	stack<tuple<int, string, execStat::execStat>> mStack;
+	stack<tuple<int, string, execStat>> mStack;
 	t = "1";
 	t1 = "1";
 	cout << (t == t1);
 	vec.push_back(Token());
 	vec.clear();
 	Parse(vec, "Dim a");
-	mStack.push(make_tuple<int, string>(std::move(0), "<Main>", execStat::normal));
+	mStack.push(make_tuple<int, string>(std::move(0), "<Main>", normal));
 	runner(vec, mIndex, mVar, mStack);
 	vec.clear();
 	Parse(vec, "a = 1 > 2 And 1 < 2");
-	mStack.push(make_tuple<int, string>(std::move(0), "<Main>", execStat::normal));
+	mStack.push(make_tuple<int, string>(std::move(0), "<Main>", normal));
 	runner(vec, mIndex, mVar, mStack);
 }
 
@@ -40,20 +40,23 @@ int main(int argc, char** argv)
 	map<string, int> varIndex;
 	vector<Variable> varVec;
 	string inputStr;
-	stack<tuple<int,string,execStat::execStat>> runStack;
-	tuple<Token, execStat::execStat> tp;
+	stack<tuple<int,string,execStat>> runStack;
+	tuple<Token, execStat> tp;
 	int index = 0;
 	//Check();
 	cout << "=>";
-	tp = make_tuple<Token, execStat::execStat>(Token(), execStat::normal);
+	tp = make_tuple<Token, execStat>(Token(), normal);
 	while (getline(cin,inputStr))
 	{
 		vector<Token> vec;
+		execStat stat;
+		if (runStack.empty())stat = normal;
+		else stat = get<2>(runStack.top());
 		try
 		{
 			Parse(vec, inputStr);
 			parseResult.push_back(vec);
-			runStack.push(make_tuple<int,string>(std::move(index),"<Main>",get<1>(tp)));
+			runStack.push(make_tuple<int,string,execStat>(std::move(index),"<Main>",move(stat)));
 			tp = runner(vec,varIndex,varVec,runStack);
 		}
 		catch (const std::exception& e)

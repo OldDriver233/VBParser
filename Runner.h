@@ -202,58 +202,90 @@ Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::str
 	result = vecUnit[0].cont;
 	return result;
 }
-
-std::tuple<Token,execStat::execStat> runner(std::vector<Token>& input, std::map<std::string,int>& varIndex, std::vector<Variable>& vars, std::stack<std::tuple<int,std::string,execStat::execStat> >& sta)
+//TODO:修复栈
+/*
+通过读取栈顶元素决定运行状态。
+对于返回值先不作变动。
+ */
+std::tuple<Token,execStat> runner(std::vector<Token>& input, std::map<std::string,int>& varIndex, std::vector<Variable>& vars, std::stack<std::tuple<int,std::string,execStat> >& sta)
 {
 	Token returnValue;
-	if (sta.empty())return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::normal);
-	execStat::execStat exs = std::get<2>(sta.top());
+	if (sta.empty())return std::make_tuple<Token, execStat>(std::move(returnValue), normal);
+	execStat exs = std::get<2>(sta.top());
+	std::string str = std::get<1>(sta.top());
+	int index = std::get<0>(sta.top());
 	returnValue = 0;
 	sta.pop();
 	if (input[0].StringGet() == "If")
 	{
-		if (exs != execStat::normal && exs != execStat::ifExec)
+		if (exs != normal && exs != ifExec)
 		{
-			return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), std::move(exs));
+			return std::make_tuple<Token, execStat>(std::move(returnValue), std::move(exs));
 		}
 		else
 		{
-			if (calculate(input, 1, input.size() - 1, varIndex, vars).BoolGet())
+			int minus = input[input.size() - 1].StringGet() == "Then"? 2: 1;
+			if (calculate(input, 1, input.size() - minus, varIndex, vars).BoolGet())
 			{
-				return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::ifExec);
+				sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), ifExec));
+				return std::make_tuple<Token, execStat>(std::move(returnValue), ifExec);
 			}
 			else
 			{
-				return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::condFalse);
+				sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), condFalse));
+				return std::make_tuple<Token, execStat>(std::move(returnValue), condFalse);
 			}
 		}
 	}
 	else if (input[0].StringGet() == "ElseIf")
 	{
-		if (exs == execStat::ifExec || exs == execStat::ifEnd)return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::ifEnd);
+		if (exs == ifExec || exs == ifEnd)
+		{
+			sta.pop();
+			sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), ifEnd));
+			return std::make_tuple<Token, execStat>(std::move(returnValue), ifEnd);
+		}
 		else
 		{
-			if (calculate(input, 1, input.size() - 1, varIndex, vars).BoolGet())
+			int minus = input[input.size() - 1].StringGet() == "Then" ? 2 : 1;
+			if (calculate(input, 1, input.size() - minus, varIndex, vars).BoolGet())
 			{
-				return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::ifExec);
+				sta.pop();
+				sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), ifExec));
+				return std::make_tuple<Token, execStat>(std::move(returnValue), ifExec);
 			}
 			else
 			{
-				return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::condFalse);
+				sta.pop();
+				sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), condFalse));
+				return std::make_tuple<Token, execStat>(std::move(returnValue), condFalse);
 			}
 		}
 	}
 	else if (input[0].StringGet() == "Else")
 	{
-		if(exs == execStat::condFalse)return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::ifExec);
-		else return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::ifEnd);
+		if (exs == condFalse)
+		{
+			sta.pop();
+			sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), ifExec));
+			return std::make_tuple<Token, execStat>(std::move(returnValue), ifExec);
+		}
+		else
+		{
+			sta.pop();
+			sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), ifEnd));
+			return std::make_tuple<Token, execStat>(std::move(returnValue), ifEnd);
+		}
 	}
 	else if(input[0].StringGet() == "End")
 	{
-		return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), execStat::normal);
+		sta.pop();
+		if (sta.empty())exs = normal;
+		else exs = std::get<2>(sta.top());
+		return std::make_tuple<Token, execStat>(std::move(returnValue), std::move(exs));
 	}
 
-	if(exs != execStat::ifExec && exs != execStat::normal)return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), std::move(exs));
+	if(exs != ifExec && exs != normal)return std::make_tuple<Token, execStat>(std::move(returnValue), std::move(exs));
 
 	if (input[0].StringGet() == "Dim")
 	{
@@ -275,6 +307,6 @@ std::tuple<Token,execStat::execStat> runner(std::vector<Token>& input, std::map<
 	{
 		throw std::runtime_error("未完成");
 	}
-	return std::make_tuple<Token, execStat::execStat>(std::move(returnValue), std::move(exs));
+	return std::make_tuple<Token, execStat>(std::move(returnValue), std::move(exs));
 }
 #endif
