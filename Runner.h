@@ -117,7 +117,7 @@ Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::str
 					}
 					if (input[i - 1].CharGet() == '>')
 					{
-						vecUnit[counter - 2].operate == '}';
+						vecUnit[counter - 2].operate = '}';
 					}
 				}
 				if (input[i].CharGet() == '>' && input[i - 1].CharGet() == '<')
@@ -179,6 +179,7 @@ Token calculate(std::vector<Token>& input, int begin, int end, std::map<std::str
 			else
 			{
 				tmp.cont = vars[varIndex[input[i].StringGet()]].var[0];
+				withVal = true;
 			}
 		}
 	}
@@ -277,7 +278,7 @@ std::tuple<Token,execStat> runner(std::vector<Token>& input, std::map<std::strin
 			return std::make_tuple<Token, execStat>(std::move(returnValue), ifEnd);
 		}
 	}
-	else if(input[0].StringGet() == "End")
+	else if(input[0].StringGet() == "End" && input[1].StringGet() == "If")
 	{
 		sta.pop();
 		if (sta.empty())exs = normal;
@@ -285,7 +286,48 @@ std::tuple<Token,execStat> runner(std::vector<Token>& input, std::map<std::strin
 		return std::make_tuple<Token, execStat>(std::move(returnValue), std::move(exs));
 	}
 
-	if(exs != ifExec && exs != normal)return std::make_tuple<Token, execStat>(std::move(returnValue), std::move(exs));
+	if (input[0].StringGet() == "For")
+	{
+		int toPos = -1, stepPos = -1;
+		Token one,zero,step,ext;
+		one = 1;
+		zero = 0;
+		for (int i = 2; i < input.size(); i++)
+		{
+			if (input[i].StringGet() == "To")toPos = i;
+			if (input[i].StringGet() == "Step")stepPos = i;
+		}
+		ext = calculate(input, toPos + 1,stepPos == -1 ? input.size()-1: stepPos - 1, varIndex, vars);
+		if (exs != forNext)
+		{
+			varIndex[input[1].StringGet()] = vars.size();
+			vars.push_back(Variable());
+			vars[vars.size() - 1].var.push_back(Token());
+			vars[vars.size() - 1].var[0] = calculate(input, 3, toPos - 1, varIndex, vars);
+		}
+		else
+		{
+			if (stepPos == -1)step = 1;
+			else step = calculate(input, stepPos + 1, input.size() - 1, varIndex, vars);
+			vars[varIndex[input[1].StringGet()]].var[0] = vars[varIndex[input[1].StringGet()]].var[0] + step;
+		}
+		if (((step > zero).BoolGet() && (vars[varIndex[input[1].StringGet()]].var[0] > ext).BoolGet()) || ((step < zero).BoolGet() && (vars[varIndex[input[1].StringGet()]].var[0] < ext).BoolGet()))
+		{
+			sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), forCondFalse));
+			return std::make_tuple<Token, execStat>(std::move(returnValue), forCondFalse);
+		}
+		else
+		{
+			sta.push(std::make_tuple<int, std::string, execStat>(std::move(index), std::move(str), forExec));
+			return std::make_tuple<Token, execStat>(std::move(returnValue), forExec);
+		}
+	}
+	else if (input[0].StringGet() == "Next")
+	{
+		return std::make_tuple<Token, execStat>(std::move(returnValue), forNext);
+	}
+
+	if(exs != ifExec && exs != normal && exs != forExec)return std::make_tuple<Token, execStat>(std::move(returnValue), std::move(exs));
 
 	if (input[0].StringGet() == "Dim")
 	{
@@ -301,7 +343,7 @@ std::tuple<Token,execStat> runner(std::vector<Token>& input, std::map<std::strin
 	}
 	else if(input[0].StringGet() == "Print")
 	{
-		std::cout << calculate(input,1,input.size()-1,varIndex,vars) << std::endl;
+		std::cout << calculate(input, 1, input.size() - 1, varIndex, vars) << std::endl;
 	}
 	else
 	{

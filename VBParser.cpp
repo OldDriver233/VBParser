@@ -43,29 +43,70 @@ int main(int argc, char** argv)
 	stack<tuple<int,string,execStat>> runStack;
 	tuple<Token, execStat> tp;
 	int index = 0;
+	int forLayer = 0;
+	int phaseStart;
 	//Check();
 	cout << "=>";
 	tp = make_tuple<Token, execStat>(Token(), normal);
-	while (getline(cin,inputStr))
+	while (true)
 	{
 		vector<Token> vec;
 		execStat stat;
+		int newIndex;
 		if (runStack.empty())stat = normal;
 		else stat = get<2>(runStack.top());
 		try
 		{
-			Parse(vec, inputStr);
-			parseResult.push_back(vec);
-			runStack.push(make_tuple<int,string,execStat>(std::move(index),"<Main>",move(stat)));
-			tp = runner(vec,varIndex,varVec,runStack);
+			if (stat != forExec && stat != forNext)
+			{
+				if (!getline(cin, inputStr))break;
+				Parse(vec, inputStr);
+				parseResult.push_back(vec);
+				if (vec[0].StringGet() == "For")
+				{
+					forLayer += 1;
+					if (forLayer == 1)phaseStart = index;
+				}
+				else if (vec[0].StringGet() == "Next")
+				{
+					forLayer -= 1;
+				}
+				else if(forLayer == 0)phaseStart = index;
+				if (forLayer == 0)
+				{
+					index = phaseStart;
+				}
+			}
+			if (forLayer == 0)
+			{
+				runStack.push(make_tuple<int, string, execStat>(std::move(index), "<Main>", move(stat)));
+				tp = runner(parseResult[index], varIndex, varVec, runStack);
+			}
+			if (get<1>(tp) == forNext)
+			{
+				newIndex = get<0>(runStack.top());
+				string func = get<1>(runStack.top());
+				runStack.pop();
+				runStack.push(make_tuple<int, string, execStat>(std::move(newIndex), "<Main>", forNext));
+				tp = runner(parseResult[newIndex], varIndex, varVec, runStack);
+				if (get<1>(tp) != forCondFalse)
+				{
+					index = newIndex;
+				}
+				else
+				{
+					runStack.pop();
+				}
+			}
+			vec.clear();
+			index++;
 		}
 		catch (const std::exception& e)
 		{
 			cout << e.what() << endl;
+			vec.clear();
+			index++;
 		}
-		cout << "=>";
-		vec.clear();
-		index++;
 	}
 	return 0;
 }

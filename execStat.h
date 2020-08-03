@@ -4,5 +4,8 @@ enum execStat
 	normal,
 	condFalse,
 	ifExec,
-	ifEnd
+	ifEnd,
+	forExec,
+	forNext,
+	forCondFalse
 };

@@ -136,133 +136,142 @@ Token& Token::operator=(const std::string& s)
 
 Token Token::operator+(Token t)
 {
-	if (this->tType == STR || t.tType == STR) 
+	Token self;
+	self = *this;
+	if (self.tType == STR || t.tType == STR) 
 	{
-		if (this->tType == STR && t.tType == STR)
+		if (self.tType == STR && t.tType == STR)
 		{
-			this->sval += t.sval;
+			self.sval += t.sval;
 		}
 	}
-	else if (this->tType == DOUBLE || t.tType == DOUBLE)
+	else if (self.tType == DOUBLE || t.tType == DOUBLE)
 	{
-		*this = typeCast(*this, DOUBLE);
+		self = typeCast(self, DOUBLE);
 		t = typeCast(t, DOUBLE);
-		this->dval += t.dval;
+		self.dval += t.dval;
 	}
-	else if (this->tType == INT || t.tType == INT)
+	else if (self.tType == INT || t.tType == INT)
 	{
-		*this = typeCast(*this, INT);
+		self = typeCast(self, INT);
 		t = typeCast(t, INT);
-		this->ival += t.ival;
+		self.ival += t.ival;
 	}
 	else
 	{
-		this->cval += t.cval;
+		self.cval += t.cval;
 	}
-	return *this;
+	return self;
 }
 
 Token Token::operator-(Token t)
 {
-	if (this->tType == STR || t.tType == STR)
+	Token self;
+	self = *this;
+	if (self.tType == STR || t.tType == STR)
 	{
 		throw (std::runtime_error("你为什么对string做减法？"));
 	}
-	else if (this->tType == DOUBLE || t.tType == DOUBLE)
+	else if (self.tType == DOUBLE || t.tType == DOUBLE)
 	{
-		*this = typeCast(*this, DOUBLE);
+		self = typeCast(self, DOUBLE);
 		t = typeCast(t, DOUBLE);
-		this->dval -= t.dval;
+		self.dval -= t.dval;
 	}
-	else if (this->tType == INT || t.tType == INT)
+	else if (self.tType == INT || t.tType == INT)
 	{
-		*this = typeCast(*this, INT);
+		self = typeCast(self, INT);
 		t = typeCast(t, INT);
-		this->ival -= t.ival;
+		self.ival -= t.ival;
 	}
 	else
 	{
-		this->cval -= t.cval;
+		self.cval -= t.cval;
 	}
-	return *this;
+	return self;
 }
 
 Token Token::operator*(Token t)
 {
-	if (this->tType == STR || t.tType == STR)
+	Token self;
+	self = *this;
+	if (self.tType == STR || t.tType == STR)
 	{
 		throw std::runtime_error("你为什么对string做乘法？");
 	}
-	else if (this->tType == DOUBLE || t.tType == DOUBLE)
+	else if (self.tType == DOUBLE || t.tType == DOUBLE)
 	{
-		*this = typeCast(*this, DOUBLE);
+		self = typeCast(self, DOUBLE);
 		t = typeCast(t, DOUBLE);
-		this->dval *= t.dval;
+		self.dval *= t.dval;
 	}
-	else if (this->tType == INT || t.tType == INT)
+	else if (self.tType == INT || t.tType == INT)
 	{
-		*this = typeCast(*this, INT);
+		self = typeCast(self, INT);
 		t = typeCast(t, INT);
-		this->ival *= t.ival;
+		self.ival *= t.ival;
 	}
 	else
 	{
-		this->cval *= t.cval;
+		self.cval *= t.cval;
 	}
-	return *this;
+	return self;
 }
 
 Token Token::operator/(Token t)
 {
-	if (this->tType == STR || t.tType == STR)
+	Token self;
+	self = *this;
+	if (self.tType == STR || t.tType == STR)
 	{
 		throw std::runtime_error("你为什么对string做除法？");
 	}
-	else if (this->tType == DOUBLE || t.tType == DOUBLE)
+	else if (self.tType == DOUBLE || t.tType == DOUBLE)
 	{
-		*this = typeCast(*this, DOUBLE);
+		self = typeCast(self, DOUBLE);
 		t = typeCast(t, DOUBLE);
-		this->dval /= t.dval;
+		self.dval /= t.dval;
 	}
-	else if (this->tType == INT || t.tType == INT)
+	else if (self.tType == INT || t.tType == INT)
 	{
-		*this = typeCast(*this, INT);
+		self = typeCast(self, INT);
 		t = typeCast(t, INT);
-		this->ival /= t.ival;
+		self.ival /= t.ival;
 	}
 	else
 	{
-		this->cval /= t.cval;
+		self.cval /= t.cval;
 	}
-	return *this;
+	return self;
 }
 
 inline Token Token::operator< (Token t)
 {
-	Token pos, neg;
+	Token pos, neg, self;
 	pos = 1;
 	neg = 0;
+	self = *this;
 	switch (t.tType)
 	{
 	case INT:
-		t = *this - t;
+		t = self - t;
 		if (t.ival < 0)return pos;
 		else return neg;
 		break;
 	case DOUBLE:
-		t = *this - t;
+		t = self - t;
 		if (t.dval < 0)return pos;
 		else return neg;
 		break;
 	case CHAR:
-		t = *this - t;
+		t = self - t;
 		if (t.cval < 0)return pos;
 		else return neg;
 		break;
 	default:
-		if (this->tType == STR && t.tType == STR)
+		if (self.tType == STR && t.tType == STR)
 		{
-			if (this->sval < t.sval)return pos;
+			if (self.sval < t.sval)return pos;
 			else return neg;
 		}
 		else throw std::runtime_error("无法比较");
@@ -272,30 +281,31 @@ inline Token Token::operator< (Token t)
 
 inline Token Token::operator==(Token t)
 {
-	Token pos, neg;
+	Token pos, neg, self;
 	pos = 1;
 	neg = 0;
+	self = *this;
 	switch (t.tType)
 	{
 	case INT:
-		t = *this - t;
+		t = self - t;
 		if (t.ival == 0)return pos;
 		else return neg;
 		break;
 	case DOUBLE:
-		t = *this - t;
+		t = self - t;
 		if (t.dval == 0)return pos;
 		else return neg;
 		break;
 	case CHAR:
-		t = *this - t;
+		t = self - t;
 		if (t.cval == 0)return pos;
 		else return neg;
 		break;
 	default:
-		if (this->tType == STR && t.tType == STR)
+		if (self.tType == STR && t.tType == STR)
 		{
-			if (this->sval == t.sval)return pos;
+			if (self.sval == t.sval)return pos;
 			else return neg;
 		}
 		else throw std::runtime_error("无法比较");
@@ -305,30 +315,31 @@ inline Token Token::operator==(Token t)
 
 inline Token Token::operator> (Token t)
 {
-	Token pos, neg;
+	Token pos, neg, self;
 	pos = 1;
 	neg = 0;
+	self = *this;
 	switch (t.tType)
 	{
 	case INT:
-		t = *this - t;
+		t = self - t;
 		if (t.ival > 0)return pos;
 		else return neg;
 		break;
 	case DOUBLE:
-		t = *this - t;
+		t = self - t;
 		if (t.dval > 0)return pos;
 		else return neg;
 		break;
 	case CHAR:
-		t = *this - t;
+		t = self - t;
 		if (t.cval > 0)return pos;
 		else return neg;
 		break;
 	default:
-		if (this->tType == STR && t.tType == STR)
+		if (self.tType == STR && t.tType == STR)
 		{
-			if (this->sval > t.sval)return pos;
+			if (self.sval > t.sval)return pos;
 			else return neg;
 		}
 		else throw std::runtime_error("无法比较");
@@ -338,30 +349,31 @@ inline Token Token::operator> (Token t)
 
 inline Token Token::operator<=(Token t)
 {
-	Token pos, neg;
+	Token pos, neg, self;
 	pos = 1;
 	neg = 0;
+	self = *this;
 	switch (t.tType)
 	{
 	case INT:
-		t = *this - t;
+		t = self - t;
 		if (t.ival <= 0)return pos;
 		else return neg;
 		break;
 	case DOUBLE:
-		t = *this - t;
+		t = self - t;
 		if (t.dval <= 0)return pos;
 		else return neg;
 		break;
 	case CHAR:
-		t = *this - t;
+		t = self - t;
 		if (t.cval <= 0)return pos;
 		else return neg;
 		break;
 	default:
-		if (this->tType == STR && t.tType == STR)
+		if (self.tType == STR && t.tType == STR)
 		{
-			if (this->sval <= t.sval)return pos;
+			if (self.sval <= t.sval)return pos;
 			else return neg;
 		}
 		else throw std::runtime_error("无法比较");
@@ -371,30 +383,31 @@ inline Token Token::operator<=(Token t)
 
 inline Token Token::operator>=(Token t)
 {
-	Token pos, neg;
+	Token pos, neg, self;
 	pos = 1;
 	neg = 0;
+	self = *this;
 	switch (t.tType)
 	{
 	case INT:
-		t = *this - t;
+		t = self - t;
 		if (t.ival >= 0)return pos;
 		else return neg;
 		break;
 	case DOUBLE:
-		t = *this - t;
+		t = self - t;
 		if (t.dval >= 0)return pos;
 		else return neg;
 		break;
 	case CHAR:
-		t = *this - t;
+		t = self - t;
 		if (t.cval >= 0)return pos;
 		else return neg;
 		break;
 	default:
-		if (this->tType == STR && t.tType == STR)
+		if (self.tType == STR && t.tType == STR)
 		{
-			if (this->sval >= t.sval)return pos;
+			if (self.sval >= t.sval)return pos;
 			else return neg;
 		}
 		else throw std::runtime_error("无法比较");
@@ -404,30 +417,31 @@ inline Token Token::operator>=(Token t)
 
 inline Token Token::operator!=(Token t)
 {
-	Token pos, neg;
+	Token pos, neg, self;
 	pos = 1;
 	neg = 0;
+	self = *this;
 	switch (t.tType)
 	{
 	case INT:
-		t = *this - t;
+		t = self - t;
 		if (t.ival != 0)return pos;
 		else return neg;
 		break;
 	case DOUBLE:
-		t = *this - t;
+		t = self - t;
 		if (t.dval != 0)return pos;
 		else return neg;
 		break;
 	case CHAR:
-		t = *this - t;
+		t = self - t;
 		if (t.cval != 0)return pos;
 		else return neg;
 		break;
 	default:
-		if (this->tType == STR && t.tType == STR)
+		if (self.tType == STR && t.tType == STR)
 		{
-			if (this->sval != t.sval)return pos;
+			if (self.sval != t.sval)return pos;
 			else return neg;
 		}
 		else throw std::runtime_error("无法比较");
