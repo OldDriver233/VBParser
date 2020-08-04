@@ -9,6 +9,7 @@
 #include<stack>
 #include<map>
 #include<tuple>
+#include<cstdio>
 
 using namespace std;
 
@@ -46,8 +47,8 @@ int main(int argc, char** argv)
 	int forLayer = 0;
 	int phaseStart;
 	//Check();
-	cout << "=>";
 	tp = make_tuple<Token, execStat>(Token(), normal);
+	if (argc > 1)freopen(argv[1], "r", stdin);
 	while (true)
 	{
 		vector<Token> vec;
